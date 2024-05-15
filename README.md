@@ -12,9 +12,18 @@ This Docker image provides a simple and fast way to set up an SSH server. The se
 
 ## Usage
 
+### Using the Pre-built Image
+
+To get started quickly, you can use the pre-built Docker image available on Docker Hub:
+
+```sh
+docker pull kevinwang15/quick-ssh-server:latest
+docker run -d -p 2222:22 -e PASSWORD=yourpassword kevinwang15/quick-ssh-server:latest
+```
+
 ### Build the Docker Image
 
-To build the Docker image, run the following command in the directory containing the Dockerfile:
+If you prefer to build the Docker image yourself, run the following command in the directory containing the Dockerfile:
 
 ```sh
 docker build -t quick-ssh-server .
@@ -41,6 +50,16 @@ ssh root@localhost -p 2222
 - `PASSWORD`: The password for the root user. This variable is required and must be set at runtime.
 
 ## Example
+
+Using the pre-built image:
+
+```sh
+docker pull kevinwang15/quick-ssh-server:latest
+docker run -d -p 2222:22 -e PASSWORD=mysecurepassword kevinwang15/quick-ssh-server:latest
+ssh root@localhost -p 2222
+```
+
+Building and running your own image:
 
 ```sh
 docker build -t quick-ssh-server .
