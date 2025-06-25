@@ -1,9 +1,9 @@
 # Use an official Ubuntu as a parent image
 FROM ubuntu:latest
 
-# Install OpenSSH server
+# Install OpenSSH server and common tools
 RUN apt-get update
-RUN apt-get install -y openssh-server
+RUN apt-get install -y openssh-server vim git curl wget nano htop net-tools iputils-ping
 RUN mkdir /var/run/sshd
 
 # Allow root login and enable gateway ports
