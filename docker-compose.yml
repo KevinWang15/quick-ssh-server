@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  ssh-server:
+    build: .
+    network_mode: host
+    environment:
+      - PASSWORD=${PASSWORD:-QuickSSH2024!}
+    volumes:
+      - ./ssh-keys:/root/.ssh
+    restart: unless-stopped

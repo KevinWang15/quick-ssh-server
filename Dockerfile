@@ -6,8 +6,13 @@ RUN apt-get update
 RUN apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
 
-# Allow root login
+# Allow root login and enable gateway ports
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN echo "GatewayPorts yes" >> /etc/ssh/sshd_config
+RUN echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
+
+# Create .ssh directory for root
+RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
 
 # Copy the pre-generated SSH host keys into the container
 RUN echo "LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFBQUFBQkc1dmJtVUFBQUFFYm05dVpRQUFBQUFBQUFBQkFBQUFNd0FBQUF0emMyZ3RaVwpReU5UVXhPUUFBQUNEMDJYUFpHTjcwZEpuREtQMWlRWWVjSEtnZXdXRktiZ2R0SGRYcStlZ2QwZ0FBQUpoeFp5MVZjV2N0ClZRQUFBQXR6YzJndFpXUXlOVFV4T1FBQUFDRDAyWFBaR043MGRKbkRLUDFpUVllY0hLZ2V3V0ZLYmdkdEhkWHErZWdkMGcKQUFBRUJTV0hRd1JCUDdLRUNQSU1SbXErSjZaSTl1ZWJMbTRiKyt1Y3lJYVc3a1cvVFpjOWtZM3ZSMG1jTW8vV0pCaDV3YwpxQjdCWVVwdUIyMGQxZXI1NkIzU0FBQUFGR0o1ZEdWa1lXNWpaVUJSUnpFNVVUbElWRU0wQVE9PQotLS0tLUVORCBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0K" | base64 -d > /etc/ssh/ssh_host_ed25519_key && \
