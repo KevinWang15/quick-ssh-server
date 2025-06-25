@@ -63,7 +63,7 @@ docker run -d -p 2222:22 -v ./ssh-keys:/root/.ssh -e PASSWORD=yourpassword quick
 
 #### Host Network Mode (for reverse tunneling)
 ```sh
-docker run -d --network host -v ./ssh-keys:/root/.ssh -e PASSWORD=yourpassword quick-ssh-server
+docker run -d --network host -v ./ssh-keys:/root/.ssh -e PASSWORD=yourpassword -e SSH_PORT=2222 quick-ssh-server
 ```
 
 ### Setting Up SSH Key Authentication
@@ -97,7 +97,7 @@ docker run -d --network host -v ./ssh-keys:/root/.ssh -e PASSWORD=yourpassword q
 
 #### Password Authentication
 ```sh
-ssh root@localhost -p 2222  # or port 22 if using host networking
+ssh root@localhost -p 2222
 ```
 
 #### SSH Key Authentication
@@ -111,15 +111,16 @@ With GatewayPorts enabled, you can create reverse tunnels:
 
 ```sh
 # Forward remote port 8080 to local port 3000
-ssh -R 8080:localhost:3000 root@yourserver
+ssh -R 8080:localhost:3000 root@yourserver -p 2222
 
 # Forward remote port 80 to local port 8000 (accessible from any interface)
-ssh -R 0.0.0.0:80:localhost:8000 root@yourserver
+ssh -R 0.0.0.0:80:localhost:8000 root@yourserver -p 2222
 ```
 
 ### Environment Variables
 
 - `PASSWORD`: The password for the root user. This variable is required and must be set at runtime.
+- `SSH_PORT`: The port SSH server listens on. Defaults to 22, but docker-compose defaults to 2222 to avoid conflicts with host SSH.
 
 ## Examples
 
@@ -129,11 +130,15 @@ ssh -R 0.0.0.0:80:localhost:8000 root@yourserver
 git clone <repository-url>
 cd quick-ssh-server
 
-# Start with password authentication
+# Start with password authentication (uses port 2222 by default)
 PASSWORD=mysecurepassword docker-compose up -d
 
 # Connect via password
-ssh root@localhost -p 22
+ssh root@localhost -p 2222
+
+# Or specify custom port
+SSH_PORT=2223 PASSWORD=mysecurepassword docker-compose up -d
+ssh root@localhost -p 2223
 ```
 
 ### SSH Key Authentication Setup
@@ -147,7 +152,7 @@ chmod 600 ssh-keys/authorized_keys
 PASSWORD=mysecurepassword docker-compose up -d
 
 # Connect with SSH key
-ssh -i ~/.ssh/id_rsa root@localhost
+ssh -i ~/.ssh/id_rsa root@localhost -p 2222
 ```
 
 ### Reverse Tunneling Example
@@ -156,7 +161,7 @@ ssh -i ~/.ssh/id_rsa root@localhost
 PASSWORD=mysecurepassword docker-compose up -d
 
 # From a remote machine, forward port 8080 to your local web server
-ssh -R 8080:localhost:3000 root@your-server-ip
+ssh -R 8080:localhost:3000 root@your-server-ip -p 2222
 
 # Now port 8080 on your server forwards to port 3000 on the remote machine
 ```

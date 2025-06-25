@@ -33,5 +33,8 @@ CMD ["/bin/bash", "-c", "\
         exit 1; \
     fi; \
     echo \"root:$PASSWORD\" | chpasswd; \
+    if [ ! -z \"$SSH_PORT\" ]; then \
+        sed -i \"s/#Port 22/Port $SSH_PORT/\" /etc/ssh/sshd_config; \
+    fi; \
     /usr/sbin/sshd -D \
 "]

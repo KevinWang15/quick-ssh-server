@@ -6,6 +6,7 @@ services:
     network_mode: host
     environment:
       - PASSWORD=${PASSWORD:-QuickSSH2024!}
+      - SSH_PORT=${SSH_PORT:-2222}
     volumes:
       - ./ssh-keys:/root/.ssh
     restart: unless-stopped
